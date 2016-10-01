@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="col-xs-10 col-xs-offset-1">
+    <ol class="breadcrumb">
+        <li><a href="{% url "block_list" %}">首页</a></li>
+        <li><a href="{% url "article_list" b.id %}">{{ b.name }}</a></li>
+        <li class="active">{{ article.title }}</li>
+     </ol>
+     </hr>
+     <table class="table table-bordered">
+         <tr>
+            <td style="width: 20%" class="text-center">
+                作者：admin
+            </td>
+            <td>
+                <p><em><h3><small>发表于：{{ article.create_timestamp }}</small></h3></em></p>
+                <p class="leader"><h3>标题：{{ article.title }}</h3></p>
+                <br/>
+                {% autoescape off %}
+                <p>{{ article.content|linebreaksbr }}</p>
+                {% endautoescape %}
+            </td>
+          </tr>
+      </table>
+</div>
+{% endblock %}

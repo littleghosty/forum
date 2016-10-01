@@ -26,3 +26,11 @@ def create_article(request, block_id):
         else:
             return render(request, "create_article.html", {"b": block,
                 "form": form})
+
+
+def article_detail(request, article_id):
+    article_id = int(article_id)
+    article = Article.objects.get(id=article_id)
+    block = article.block
+    return render(request, "article_detail.html", {"article": article,
+        "b": block})
