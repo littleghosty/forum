@@ -1,13 +1,17 @@
 from django.shortcuts import render, redirect
 from .models import Block, Article
 from .forms import ArticleForm
+from utils.paginator import paginator_queryset
 
 
 def article_list(request, block_id):
     block_id = int(block_id)
     block = Block.objects.get(id=block_id)
-    articles_objs = Article.objects.filter(block=block, status=0).order_by("-id")
-    return render(request, "article_list.html", {"articles": articles_objs, "b": block})
+    page_no = int(request.GET.get("page_no", "1"))
+    articles_objs = Article.objects.filter(block=block, status=0).order_by("-last_update_timestamp")
+    object_list, pagination_data = paginator_queryset(articles_objs, page_no)
+    return render(request, "article_list.html", {"articles": object_list,
+                            "b": block, "pagination": pagination_data})
 
 
 def create_article(request, block_id):
