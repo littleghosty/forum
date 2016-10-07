@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from .models import Block, Article
 from .forms import ArticleForm
 from utils.paginator import paginator_queryset
@@ -14,6 +15,7 @@ def article_list(request, block_id):
                             "b": block, "pagination": pagination_data})
 
 
+@login_required
 def create_article(request, block_id):
     block_id = int(block_id)
     block = Block.objects.get(id=block_id)
@@ -24,6 +26,7 @@ def create_article(request, block_id):
         if form.is_valid():
             article = form.save(commit=False)
             article.block = block
+            article.owner = request.user
             article.status = 0
             article.save()
             return redirect("/article/list/%s" % block_id)
