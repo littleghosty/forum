@@ -10,7 +10,7 @@
      <table class="table table-bordered">
          <tr>
             <td style="width: 20%" class="text-center">
-                作者：admin
+                作者：{{ article.owner }}
             </td>
             <td>
                 <p><em><h3><small>发表于：{{ article.create_timestamp }}</small></h3></em></p>
@@ -21,6 +21,57 @@
                 {% endautoescape %}
             </td>
           </tr>
+          {% for comment in comments %}
+          <tr>
+            <td style="width: 20%" class="text-center">
+                作者: {{ comment.owner }}
+            </td>
+            <td>
+                <p><em><h6><small>发表于：{{ comment.create_timestamp }}</small></h6></em></p>
+                <a href="#" class="btn btn-primary pull-right subCommentBtn">回复</a>
+                <br/>
+                {% autoescape off %}
+                <p>{{ comment.content|linebreaksbr }}</p>
+                {% endautoescape %}
+            </td>
+          </tr>
+          {% endfor %}
+      </table>
+      {% include "component/paginator.html" with param_name="comment_page" %}
+      <table class="table mainTable">
+        <tr>
+          <td class="author">
+          <center><span>回复</  span></center>
+          </td>
+          <td class="content">
+            <textarea name="content" id="contentInput" class="form-control" type="text/plain">
+            </textarea>
+            <br>
+            <button class="btn btn-primary" id="commentBtn">发表评论</button>
+          </td>
+        </tr>
       </table>
 </div>
+<script type="text/javascript" src="/static/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.csrf.js"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+  var article_id = {{ article.id }};
+
+
+  $("#commentBtn").click(function () {
+    var comment = $("#contentInput").val();
+    var param = {"article_id": article_id, "content": comment,};
+    $.post("http://127.0.0.1:8000/comment/create/", param, function (data) {
+      var ret = JSON.parse(data);
+      if (ret["status"] == "ok") {
+          $("#contentInput").val("");
+          window.location.href = "/article/list/detail/{{ article.id }}";
+      } else {
+          alert(ret["msg"]);
+      }
+    });
+  })
+});
+</script>
 {% endblock %}

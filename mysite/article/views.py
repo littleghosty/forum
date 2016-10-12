@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Block, Article
+from .models import Article
+from block.models import Block
+from comment.models import Comment
 from .forms import ArticleForm
 from utils.paginator import paginator_queryset
 
@@ -39,5 +41,10 @@ def article_detail(request, article_id):
     article_id = int(article_id)
     article = Article.objects.get(id=article_id)
     block = article.block
+    comments = Comment.objects.filter(article=article, status=0).order_by("id")
+    page_no = int(request.GET.get("comment_page", "1"))
+    object_list, pagination_data = paginator_queryset(comments, page_no, num_per_page=10)
     return render(request, "article_detail.html", {"article": article,
-        "b": block})
+                                                   "comments": object_list,
+                                                   "b": block,
+                                                   "pagination": pagination_data})
