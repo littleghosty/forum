@@ -27,9 +27,19 @@
                 作者: {{ comment.owner }}
             </td>
             <td>
-                <p><em><h6><small>发表于：{{ comment.create_timestamp }}</small></h6></em></p>
-                <a href="#" class="btn btn-primary pull-right subCommentBtn">回复</a>
+                <p>
+                <em><small>发表于：{{ comment.create_timestamp }}</small></em>
+               </p>
+                <a href="#replyZone" data-id="{{ comment.id }}"
+                    class="btn btn-primary pull-right replyBtn">回复</a>
                 <br/>
+                {% if comment.to_comment %}
+                <blockquote>
+                <b>{{ comment.to_comment.owner.username }}:</b>
+                <br />
+                {{ comment.to_comment.content|linebreaksbr }}
+                </blockquote>
+                {% endif %}
                 {% autoescape off %}
                 <p>{{ comment.content|linebreaksbr }}</p>
                 {% endautoescape %}
@@ -38,14 +48,13 @@
           {% endfor %}
       </table>
       {% include "component/paginator.html" with param_name="comment_page" %}
-      <table class="table mainTable">
+      <table id=replyZone class="table mainTable">
         <tr>
           <td class="author">
-          <center><span>回复</  span></center>
+              <center><span>{{ user.username }}:</span></center>
           </td>
           <td class="content">
-            <textarea name="content" id="contentInput" class="form-control" type="text/plain">
-            </textarea>
+        <textarea class="form-control" id="contentInput" rows="3"></textarea>
             <br>
             <button class="btn btn-primary" id="commentBtn">发表评论</button>
           </td>
@@ -57,12 +66,20 @@
 <script type="text/javascript">
 $(document).ready(function () {
   var article_id = {{ article.id }};
+  var to_comment_id = 0;
+
+  $(".replyBtn").click(function (e) {
+      to_comment_id = parseInt($(e.target).attr("data-id"));
+      $("#contentInput").focus();
+      return false;
+});
 
 
   $("#commentBtn").click(function () {
     var comment = $("#contentInput").val();
-    var param = {"article_id": article_id, "content": comment,};
-    $.post("http://127.0.0.1:8000/comment/create/", param, function (data) {
+    var param = {"article_id": article_id, "content": comment,
+                  "to_comment_id": to_comment_id,};
+    $.post("/comment/create/", param, function (data) {
       var ret = JSON.parse(data);
       if (ret["status"] == "ok") {
           $("#contentInput").val("");
