@@ -16,7 +16,11 @@
 <div class="col-xs-12 col-md-2">
     <div class="well">
         {% if user.is_authenticated %}
-        <p> {{ user.username }}，欢迎来到论坛！</p>
+        <p> {{ user.username }}，欢迎来到论坛！
+        {% if msg_cnt %}
+        <a href="/message/list"><span class="badge">{{ msg_cnt }}</span></a>
+        {% endif %}
+        </p>
         <a href="{% url 'logout' %}">登出</a>
         {% else %}
         <p>匿名用户，请<a href="{% url 'login' %}">登录</a>

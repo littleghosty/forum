@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^$', block_list, name="block_list"),
     url(r'^article/', include("article.urls")),
     url(r'^comment/', include("comment.urls")),
+    url(r'^message/', include("message.urls")),
     url(r'^accounts/', include("django.contrib.auth.urls")),
     url(r'^register/', include("usercenter.urls")),
 ]
