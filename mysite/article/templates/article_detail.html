@@ -10,7 +10,10 @@
      <table class="table table-bordered">
          <tr>
             <td style="width: 20%" class="text-center">
-                作者：{{ article.owner }}
+            <img src="{{ article.owner.userprofile.avatar }}"
+             style="width: 100px; height: 150px;"
+             alt="未设置头像" />
+            <p>{{ article.owner }}</p>
             </td>
             <td>
                 <p><em><h3><small>发表于：{{ article.create_timestamp }}</small></h3></em></p>
@@ -24,7 +27,10 @@
           {% for comment in comments %}
           <tr>
             <td style="width: 20%" class="text-center">
-                作者: {{ comment.owner }}
+            <img src="{{ comment.owner.userprofile.avatar }}"
+             style="width: 100px; height: 150px;"
+             alt="未设置头像" />
+            <p>{{ comment.owner }}</p>
             </td>
             <td>
                 <p>

@@ -1,9 +1,11 @@
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from .models import ActivateCode
 import uuid
+import os
 from django.http import HttpResponse
 import datetime
 
@@ -57,3 +59,25 @@ def activate(request, code):
         return HttpResponse("激活成功")
     else:
         return HttpResponse("激活失败")
+
+
+@login_required
+def upload_avatar(request):
+    if request.method == "GET":
+        return render(request, "upload_avatar.html")
+    else:
+        profile = request.user.userprofile
+        avatar_file = request.FILES.get("avatar", None)
+        if not avatar_file:
+            return HttpResponse("未选择文件")
+        file_name = request.user.username + avatar_file.name
+        if avatar_file.size > 50000:
+            return HttpResponse("图片大小不能超过500KB")
+        file_path = os.path.join("/usr/share/userres/avatar/", file_name)
+        with open(file_path, 'wb+') as destination:
+            for chunk in avatar_file.chunks():
+                destination.write(chunk)
+        url = "http://res.myforum.com/avatar/%s" % file_name
+        profile.avatar = url
+        profile.save()
+        return redirect("/")

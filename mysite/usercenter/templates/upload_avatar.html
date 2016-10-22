@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="post" action="" enctype="multipart/form-data">
+  {% csrf_token %}
+  <label>上传头像</label>
+  <input name="avatar" type="file"  />
+  <br />
+  <input type="submit" class="btn btn-primary" value="提交"  />
+</form>
+{% endblock %}

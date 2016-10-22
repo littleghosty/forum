@@ -16,6 +16,13 @@
 <div class="col-xs-12 col-md-2">
     <div class="well">
         {% if user.is_authenticated %}
+        {% if user.userprofile.avatar %}
+        <img src="{{ user.userprofile.avatar }}"
+             style="width: 100px; height: 150px;"
+             alt="头像" />
+        {% else %}
+        <a href="/register/avatar/">还没有头像，去上传</a>
+        {% endif %}
         <p> {{ user.username }}，欢迎来到论坛！
         {% if msg_cnt %}
         <a href="/message/list"><span class="badge">{{ msg_cnt }}</span></a>
