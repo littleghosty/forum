@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^message/', include("message.urls")),
     url(r'^accounts/', include("django.contrib.auth.urls")),
     url(r'^register/', include("usercenter.urls")),
+    url(r'^ueditor/', include("DjangoUeditor.urls")),
 ]

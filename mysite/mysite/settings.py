@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'usercenter',
     'comment',
     'message',
+    'DjangoUeditor',
 ]
 
 MIDDLEWARE = [
@@ -128,3 +129,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
         os.path.join(os.path.dirname(BASE_DIR), "static"),
 )
+# Media files
+MEDIA_ROOT = "/usr/share/userres/article/"
+MEDIA_URL = "http://res.myforum.com/article/"
